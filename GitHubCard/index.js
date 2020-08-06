@@ -35,7 +35,23 @@ axios.get("https://api.github.com/users/samkester")
     user, and adding that card to the DOM.
 */
 
-const followersArray = [];
+const followersArray = ["MartaKode", "jidelson", "isaac-gorman", "AustinKelsay", "zakmayfield"];
+// since I have no followers, this list is padded out with people from my build week 1 team
+
+console.log(followersArray);
+
+Promise.allSettled(followersArray.map(item => axios.get(`https://api.github.com/users/${item}`))).then(results => {
+  // .map creates an array of promises, one from the axios.get() result of each follower
+  // Promise.allSettled waits until all of those promises resolve, then concatenates the results into an array
+  // `results` is the array of results of each promise
+  console.log(results);
+  results.forEach(item => hook.append(cardFor(item.value.data)));
+}).catch(error => console.log(error));
+
+// n.b. - Promise.all works identically to .allSettled EXCEPT that if one of the promises fails, .all fails
+//   entirely, whereas .allSettled will continue to return the results of the fulfilled promise(s). Therefore
+//   .all is more suited to tasks where any part failing is critical, .allSettled to parallel tasks where parts
+//   can succeed independently of one another.
 
 /*
   STEP 3: Create a function that accepts a single object as its only argument.
@@ -79,7 +95,7 @@ function cardFor(user){
   cardUsername.classList.add("username");
 
   cardImg.src = user.avatar_url;
-  cardName.textContent = user.name ?? "No Name";
+  cardName.textContent = user.name ?? user.login; // github sets name=null when the display name is the same as the username
   cardUsername.textContent = user.login;
   cardLocation.textContent = `Location: ${user.location}`;
   cardProfile.textContent = "Profile: ";
