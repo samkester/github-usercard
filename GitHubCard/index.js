@@ -6,8 +6,10 @@ import axios from "axios";
     https://api.github.com/users/<your name>
 */
 
-const myProfile = axios.get("https://api.github.com/users/samkester")
-.then(result => console.log(cardFor(result.data)));
+const hook = document.querySelector(".cards");
+
+axios.get("https://api.github.com/users/samkester")
+.then(result => hook.append(cardFor(result.data)));
 
 /*
   STEP 2: Inspect and study the data coming back, this is YOUR
@@ -58,6 +60,7 @@ const followersArray = [];
 function cardFor(user){
   const cardBase = document.createElement("div");
   const cardImg = document.createElement("img");
+  const cardInfo = document.createElement("div");
   const cardName = document.createElement("h3");
   const cardUsername = document.createElement("p");
   const cardLocation = document.createElement("p");
@@ -67,16 +70,18 @@ function cardFor(user){
   const cardFollowing = document.createElement("p");
   const cardBio = document.createElement("p");
 
-  cardBase.append(cardImg, cardName, cardUsername, cardLocation, cardProfile, cardFollowers, cardFollowing, cardBio);
+  cardBase.append(cardImg, cardInfo);
+  cardInfo.append(cardName, cardUsername, cardLocation, cardProfile, cardFollowers, cardFollowing, cardBio);
   
   cardBase.classList.add("card");
-  cardBase.classList.add("name");
-  cardBase.classList.add("username");
+  cardInfo.classList.add("card-info");
+  cardName.classList.add("name");
+  cardUsername.classList.add("username");
 
   cardImg.src = user.avatar_url;
-  cardName.textContent = user.name;
+  cardName.textContent = user.name ?? "No Name";
   cardUsername.textContent = user.login;
-  cardLocation.textContent = user.location;
+  cardLocation.textContent = `Location: ${user.location}`;
   cardProfile.textContent = "Profile: ";
   cardProfileLink.href = `https://github.com/${user.login}`;
   cardProfileLink.textContent = cardProfileLink.href;
