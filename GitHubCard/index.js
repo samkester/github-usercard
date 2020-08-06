@@ -6,7 +6,8 @@ import axios from "axios";
     https://api.github.com/users/<your name>
 */
 
-const myProfile = axios.get("https://api.github.com/users/samkester").then(result => console.log(result));
+const myProfile = axios.get("https://api.github.com/users/samkester")
+.then(result => console.log(cardFor(result.data)));
 
 /*
   STEP 2: Inspect and study the data coming back, this is YOUR
@@ -53,6 +54,39 @@ const followersArray = [];
       </div>
     </div>
 */
+
+function cardFor(user){
+  const cardBase = document.createElement("div");
+  const cardImg = document.createElement("img");
+  const cardName = document.createElement("h3");
+  const cardUsername = document.createElement("p");
+  const cardLocation = document.createElement("p");
+  const cardProfile = document.createElement("p");
+  const cardProfileLink = document.createElement("a");
+  const cardFollowers = document.createElement("p");
+  const cardFollowing = document.createElement("p");
+  const cardBio = document.createElement("p");
+
+  cardBase.append(cardImg, cardName, cardUsername, cardLocation, cardProfile, cardFollowers, cardFollowing, cardBio);
+  
+  cardBase.classList.add("card");
+  cardBase.classList.add("name");
+  cardBase.classList.add("username");
+
+  cardImg.src = user.avatar_url;
+  cardName.textContent = user.name;
+  cardUsername.textContent = user.login;
+  cardLocation.textContent = user.location;
+  cardProfile.textContent = "Profile: ";
+  cardProfileLink.href = `https://github.com/${user.login}`;
+  cardProfileLink.textContent = cardProfileLink.href;
+  cardProfile.append(cardProfileLink);
+  cardFollowers.textContent = `Followers: ${user.followers}`;
+  cardFollowing.textContent = `Following: ${user.following}`;
+  cardBio.textContent = `Bio: ${user.bio}`;
+
+  return cardBase;
+}
 
 /*
   List of LS Instructors Github username's:
